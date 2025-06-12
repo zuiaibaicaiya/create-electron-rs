@@ -1,3 +1,9 @@
+``` bash
+npm publish --provenance false
+
+```
+
+
 # Rslib project
 
 ## Setup

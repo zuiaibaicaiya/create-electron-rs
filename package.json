@@ -45,6 +45,6 @@
   "publishConfig": {
     "access": "public",
     "provenance": true,
-    "registry": "https://www.npmjs.com/"
+    "registry": "https://registry.npmjs.org/"
   }
 }
