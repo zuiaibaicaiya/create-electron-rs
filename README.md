@@ -5,7 +5,7 @@
 Install the dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Get started
@@ -13,11 +13,11 @@ npm install
 Build the library:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 Build the library in watch mode:
 
 ```bash
-npm run dev
+pnpm dev
 ```

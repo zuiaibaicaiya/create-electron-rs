@@ -3,28 +3,30 @@ import {
   BrowserWindow,
   type BrowserWindowConstructorOptions
 } from 'electron';
-// import { join } from 'node:path';
+import { join } from 'node:path';
 
 app.commandLine.appendSwitch('remote-allow-origins', '*');
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
+const __IS_DEV__ = process.env.NODE_ENV === 'development';
 
 let mainWindow: BrowserWindow;
-const createWindow = async () => {
+const createWindow = async (title = 'main') => {
+
   const config: BrowserWindowConstructorOptions = {
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false,
       contextIsolation: false,
-      // preload: join(__dirname, 'preload.cjs')
+      preload: join(__dirname, 'preload.cjs')
     }
   };
   mainWindow = new BrowserWindow(config);
-  if (process.env['ELECTRON_RENDERER_URL']) {
-    await mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']).then(() => {
+  if (__IS_DEV__) {
+    await mainWindow.loadURL(process.argv[2]).then(() => {
       mainWindow.webContents.openDevTools({ mode: 'bottom' });
     });
   } else {
-    await mainWindow.loadFile(app.getAppPath() + '/dist/index.html');
+    await mainWindow.loadFile(app.getAppPath() + '/koi-ui/dist/index.html');
   }
 };
 

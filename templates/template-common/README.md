@@ -1,11 +1,11 @@
-# create-electron-rs project
+# Rsbuild project
 
 ## Setup
 
 Install the dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Get started
@@ -13,41 +13,17 @@ npm install
 Start the dev server:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Build the app for production:
 
 ```bash
-npm run build
+pnpm build
 ```
 
-If you need preload , modify electronRs config like this
-``` typescript
-electronRs({ preload: {} })
-```
+Preview the production build locally:
 
-If you need obfuscator , modify electronRs config like this . It's only effective in the production mode.
-
-
-
-```typescript
-
-electronRs({
-  obfuscator: {
-    options: {
-      rotateStringArray: true,
-      stringArray: true,
-      stringArrayThreshold: 0.75,
-    },
-    excludes: [
-      '**/*.ts',
-      '**/*.tsx',
-      '**/*.d.ts',
-      '**/node_modules/**',
-      // '**/vendor.js' // 排除第三方库
-    ],
-  },
-})
-
+```bash
+pnpm preview
 ```
