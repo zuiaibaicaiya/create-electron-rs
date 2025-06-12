@@ -1,0 +1,141 @@
+import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
+import { createRsbuild } from '@rsbuild/core';
+// @ts-ignore
+import electron from 'electron';
+import { spawn } from 'child_process';
+import * as path from 'node:path';
+import { resolve } from 'path';
+import * as fs from 'node:fs';
+import * as bytenode from 'bytenode';
+
+const isDev = process.env.NODE_ENV === 'development';
+
+export const electronRs = (): RsbuildPlugin => ({
+  name: 'electronRs',
+  async setup(api) {
+    api.modifyRsbuildConfig((userConfig, { mergeRsbuildConfig }) => {
+      const extraConfig: RsbuildConfig = {
+        output: {
+          assetPrefix: './',
+          externals: {
+            fs: 'commonjs2 fs',
+            path: 'commonjs2 path',
+            os: 'commonjs2 os',
+            process: 'commonjs2 process',
+            electron: 'commonjs2 electron'
+          }
+        }
+      };
+      return mergeRsbuildConfig(userConfig, extraConfig);
+    });
+    const rsbuild = createRsbuild({
+      rsbuildConfig: {
+        environments: {
+          main: {
+            performance: {
+              printFileSize: !isDev
+            },
+            source: {
+              entry: {
+                main: path.join(process.cwd(), './electron/main.ts')
+              }
+            },
+            output: {
+              distPath: {
+                js: '',
+                root: 'dist/electron'
+              },
+              filename: {
+                js: '[name].cjs'
+              },
+              sourceMap: false
+            },
+            tools: {
+              htmlPlugin: false,
+              rspack: {
+                name: 'electron-rs-main',
+                target: 'electron-main'
+              }
+            }
+          },
+          preload: {
+            performance: {
+              printFileSize: !isDev
+            },
+            source: {
+              entry: {
+                preload: path.join(process.cwd(), './electron/preload.ts')
+              }
+            },
+            output: {
+              distPath: {
+                js: '',
+                root: 'dist/electron'
+              },
+              filename: {
+                js: '[name].cjs'
+              },
+              sourceMap: false
+            },
+            tools: {
+              htmlPlugin: false,
+              rspack: {
+                name: 'electron-rs-preload',
+                target: 'electron-preload'
+              }
+            }
+          }
+        }
+      }
+    });
+    api.onBeforeStartDevServer(async () => {
+      await (await rsbuild).build();
+    });
+    api.onAfterStartDevServer(async (options) => {
+      const address = `http://localhost:${options.port}`;
+// console.log(address)
+      const electronProcess = spawn(
+        electron.toString(),
+        ['./dist/electron/main.cjs', address],
+        {
+          cwd: process.cwd(),
+          stdio: 'inherit',
+          env: {
+            ...process.env,
+            ELECTRON_RENDERER_URL: address
+          }
+        }
+      );
+      electronProcess.on('close', () => {
+        electronProcess.kill();
+        process.exit();
+      });
+    });
+
+    api.onAfterBuild(async () => {
+      await (await rsbuild).build();
+// 加密主进程
+      await bytenode.compileFile({
+        electron: true,
+        filename: resolve(process.cwd(), 'dist', 'electron', 'main.cjs')
+      });
+      fs.writeFileSync(
+        resolve(process.cwd(), 'dist', 'electron', 'main.cjs'),
+        'require(\'bytenode\');module.exports = require(\'./main.jsc\')'
+      );
+// 加密preload
+      await bytenode.compileFile({
+        electron: true,
+        filename: resolve(process.cwd(), 'dist', 'electron', 'preload.cjs')
+      });
+      fs.writeFileSync(
+        resolve(process.cwd(), 'dist', 'electron', 'preload.cjs'),
+        'require(\'bytenode\');module.exports = require(\'./preload.jsc\')'
+      );
+      spawn('electron-builder', {
+        stdio: 'inherit',
+        shell: true
+      });
+    });
+  }
+});
