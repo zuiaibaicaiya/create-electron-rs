@@ -2,10 +2,11 @@
   "name": "rsbuild-react-js",
   "version": "1.0.0",
   "private": true,
+  "main": "dist/electron/main.cjs",
   "type": "module",
   "scripts": {
     "build": "rsbuild build",
-    "dev": "rsbuild dev --open",
+    "dev": "rsbuild dev",
     "preview": "rsbuild preview"
   },
   "dependencies": {
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "@rsbuild/core": "^1.3.22",
-    "@rsbuild/plugin-react": "^1.3.2"
+    "@rsbuild/plugin-react": "^1.3.2",
+    "@rsbuild/plugin-node-polyfill": "^1.3.0"
   }
 }
