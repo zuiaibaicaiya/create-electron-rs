@@ -30,7 +30,7 @@ async function getTemplateName({ template }: Argv) {
       options: [
         // { value: 'vanilla', label: 'Vanilla' },
         { value: 'react', label: 'React 19' },
-        { value: 'react18', label: 'React 18' },
+        // { value: 'react18', label: 'React 18' },
         { value: 'vue3', label: 'Vue 3' },
         // { value: 'vue2', label: 'Vue 2' },
         // { value: 'lit', label: 'Lit' },
@@ -46,7 +46,7 @@ async function getTemplateName({ template }: Argv) {
       message: 'Select language',
       options: [
         { value: 'ts', label: 'TypeScript' },
-        { value: 'js', label: 'JavaScript' }
+        // { value: 'js', label: 'JavaScript' }
       ]
     })
   );
