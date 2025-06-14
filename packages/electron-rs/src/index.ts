@@ -24,6 +24,9 @@ export const electronRs = (): RsbuildPlugin => ({
             electron: 'commonjs2 electron',
           },
         },
+        html: {
+          title: 'electronRs',
+        },
       };
       return mergeRsbuildConfig(userConfig, extraConfig);
     });
