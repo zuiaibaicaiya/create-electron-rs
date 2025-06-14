@@ -1,6 +1,5 @@
 import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
 import { createRsbuild } from '@rsbuild/core';
-// @ts-ignore
 import electron from 'electron';
 import { spawn } from 'child_process';
 import * as path from 'node:path';
@@ -22,9 +21,9 @@ export const electronRs = (): RsbuildPlugin => ({
             path: 'commonjs2 path',
             os: 'commonjs2 os',
             process: 'commonjs2 process',
-            electron: 'commonjs2 electron'
-          }
-        }
+            electron: 'commonjs2 electron',
+          },
+        },
       };
       return mergeRsbuildConfig(userConfig, extraConfig);
     });
@@ -33,67 +32,76 @@ export const electronRs = (): RsbuildPlugin => ({
         environments: {
           main: {
             performance: {
-              printFileSize: !isDev
+              printFileSize: !isDev,
             },
             source: {
               entry: {
-                main: path.join(process.cwd(), './electron/main.ts')
-              }
+                main: fs.existsSync(
+                  path.join(process.cwd(), './electron/main.ts'),
+                )
+                  ? path.join(process.cwd(), './electron/main.ts')
+                  : path.join(process.cwd(), './electron/main.js'),
+              },
             },
             output: {
               distPath: {
                 js: '',
-                root: 'dist/electron'
+                root: 'dist/electron',
               },
               filename: {
-                js: '[name].cjs'
+                js: '[name].cjs',
               },
-              sourceMap: false
+              sourceMap: false,
             },
             tools: {
               htmlPlugin: false,
               rspack: {
+                dependencies: ['electron-rs-preload'],
                 name: 'electron-rs-main',
-                target: 'electron-main'
-              }
-            }
+                target: 'electron-main',
+              },
+            },
           },
           preload: {
             performance: {
-              printFileSize: !isDev
+              printFileSize: !isDev,
             },
             source: {
               entry: {
-                preload: path.join(process.cwd(), './electron/preload.ts')
-              }
+                preload: fs.existsSync(
+                  path.join(process.cwd(), './electron/preload.ts'),
+                )
+                  ? path.join(process.cwd(), './electron/preload.ts')
+                  : path.join(process.cwd(), './electron/preload.js'),
+              },
             },
             output: {
               distPath: {
                 js: '',
-                root: 'dist/electron'
+                root: 'dist/electron',
               },
               filename: {
-                js: '[name].cjs'
+                js: '[name].cjs',
               },
-              sourceMap: false
+              sourceMap: false,
             },
             tools: {
               htmlPlugin: false,
               rspack: {
                 name: 'electron-rs-preload',
-                target: 'electron-preload'
-              }
-            }
-          }
-        }
-      }
+                target: 'electron-preload',
+              },
+            },
+          },
+        },
+      },
     });
     api.onBeforeStartDevServer(async () => {
       await (await rsbuild).build();
     });
     api.onAfterStartDevServer(async (options) => {
       const address = `http://localhost:${options.port}`;
-// console.log(address)
+      // console.log(address)
       const electronProcess = spawn(
         electron.toString(),
         ['./dist/electron/main.cjs', address],
@@ -102,9 +110,9 @@ export const electronRs = (): RsbuildPlugin => ({
           stdio: 'inherit',
           env: {
             ...process.env,
-            ELECTRON_RENDERER_URL: address
-          }
-        }
+            ELECTRON_RENDERER_URL: address,
+          },
+        },
       );
       electronProcess.on('close', () => {
         electronProcess.kill();
@@ -114,28 +122,33 @@ export const electronRs = (): RsbuildPlugin => ({
 
     api.onAfterBuild(async () => {
       await (await rsbuild).build();
-// 加密主进程
+      // 加密主进程
       await bytenode.compileFile({
         electron: true,
-        filename: resolve(process.cwd(), 'dist', 'electron', 'main.cjs')
+        filename: resolve(process.cwd(), 'dist', 'electron', 'main.cjs'),
       });
       fs.writeFileSync(
         resolve(process.cwd(), 'dist', 'electron', 'main.cjs'),
-        'require(\'bytenode\');module.exports = require(\'./main.jsc\')'
+        "require('bytenode');module.exports = require('./main.jsc')",
       );
-// 加密preload
-      await bytenode.compileFile({
-        electron: true,
-        filename: resolve(process.cwd(), 'dist', 'electron', 'preload.cjs')
-      });
-      fs.writeFileSync(
-        resolve(process.cwd(), 'dist', 'electron', 'preload.cjs'),
-        'require(\'bytenode\');module.exports = require(\'./preload.jsc\')'
-      );
+      if (
+        fs.existsSync(resolve(process.cwd(), 'dist', 'electron', 'preload.cjs'))
+      ) {
+        // 加密preload
+        await bytenode.compileFile({
+          electron: true,
+          filename: resolve(process.cwd(), 'dist', 'electron', 'preload.cjs'),
+        });
+        fs.writeFileSync(
+          resolve(process.cwd(), 'dist', 'electron', 'preload.cjs'),
+          "require('bytenode');module.exports = require('./preload.jsc')",
+        );
+      }
+
       spawn('electron-builder', {
         stdio: 'inherit',
-        shell: true
+        shell: true,
       });
     });
-  }
+  },
 });
