@@ -5,7 +5,7 @@ import {
   type ESLintTemplateName,
   checkCancel,
   create,
-  select
+  select,
 } from 'create-rstack';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -37,8 +37,8 @@ async function getTemplateName({ template }: Argv) {
         // { value: 'preact', label: 'Preact' },
         // { value: 'svelte', label: 'Svelte' },
         // { value: 'solid', label: 'Solid' }
-      ]
-    })
+      ],
+    }),
   );
 
   const language = checkCancel<string>(
@@ -46,9 +46,9 @@ async function getTemplateName({ template }: Argv) {
       message: 'Select language',
       options: [
         { value: 'ts', label: 'TypeScript' },
-        // { value: 'js', label: 'JavaScript' }
-      ]
-    })
+        { value: 'js', label: 'JavaScript' },
+      ],
+    }),
   );
 
   return `${framework}-${language}`;
@@ -97,5 +97,5 @@ create({
     // 'solid-ts'
   ],
   getTemplateName,
-  mapESLintTemplate
+  mapESLintTemplate,
 });
