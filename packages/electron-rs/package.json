@@ -1,6 +1,15 @@
 {
   "name": "electron-rs",
   "version": "1.0.9",
+  "description": "Electron build tooling based on rsbuild",
+  "author": "最爱白菜吖<1355081829@qq.com>",
+  "license": "MIT",
+  "homepage": "https://space.bilibili.com/388985971",
+  "keywords": [
+    "electron",
+    "electron-rs",
+    "plugin"
+  ],
   "type": "module",
   "exports": {
     ".": {
