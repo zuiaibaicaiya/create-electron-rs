@@ -20,7 +20,7 @@
     "@types/react-dom": "^19.1.6",
     "electron": "^36.4.0",
     "electron-builder": "^26.0.12",
-    "electron-rs": "^1.0.8",
+    "electron-rs": "^1.0.10",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "typescript": "^5.8.3"

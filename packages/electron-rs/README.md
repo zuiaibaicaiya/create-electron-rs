@@ -1,23 +1,95 @@
-# Rslib project
+# electron-rs
+### electron project with rsbuild and web framework,etc vue or react
+## Create your project
+``` bash
+npm create rsbuild@latest
+# pnpm 
+# pnpm create rsbuild@latest
 
-## Setup
-
-Install the dependencies:
+```
+## Install the dependencies:
 
 ```bash
-pnpm install
+npm i bytenode
+
+npm i electron-rs -D
+npm i @rsbuild/plugin-node-polyfill -D
+# or
+# pnpm i bytenode
+# pnpm i electron-rs -D
+# pnpm i @rsbuild/plugin-node-polyfill -D
+
+```
+# Modify rsbuild.config.ts
+## react+ts
+
+``` typescript
+// rsbuild.config.ts
+import { defineConfig } from '@rsbuild/core';
+import { pluginReact } from '@rsbuild/plugin-react';
+import { pluginNodePolyfill } from '@rsbuild/plugin-node-polyfill';
+import { electronRs } from 'electron-rs';
+
+export default defineConfig({
+  plugins: [pluginReact(), electronRs(), pluginNodePolyfill()]
+});
+
 ```
 
-## Get started
+## vue3+ts
 
-Build the library:
+```typescript
+// rsbuild.config.ts
 
-```bash
-pnpm build
+import { defineConfig } from '@rsbuild/core';
+import { pluginVue } from '@rsbuild/plugin-vue';
+import { pluginNodePolyfill } from '@rsbuild/plugin-node-polyfill';
+import { electronRs } from 'electron-rs';
+export default defineConfig({
+  plugins: [pluginVue(), electronRs(), pluginNodePolyfill()],
+});
+
+
 ```
 
-Build the library in watch mode:
-
+## Create main.ts and preload.ts in `electron` folder at project root
 ```bash
-pnpm dev
+mkdir electron && cd electron 
+touch electron.ts && touch preload.ts
+```
+## Modify you package.json add the code
+```json
+{
+
+  "main": "dist/electron/main.cjs",
+  "build": {
+    "directories": {
+      "output": "build-electron"
+    },
+    "extraResources": [],
+    "files": [
+      "dist"
+    ]
+  }
+}
+
+```
+## Start your project
+```bash 
+npm run dev
+# or
+# pnpm run dev
+```
+## Build your project
+```bash 
+npm run build
+# or
+# pnpm run build
+```
+
+## you can also create a new project with `create-electron-rs`
+```bash
+npm create electron-rs@latest
+# or pnpm
+# pnpm create electron-rs@latest
 ```
