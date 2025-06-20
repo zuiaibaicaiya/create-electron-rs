@@ -15,7 +15,7 @@ const isDev = process.env.NODE_ENV === 'development';
 
 interface electronRsConfig {
   main: EnvironmentConfig;
-  preload?: EnvironmentConfig;
+  preload?: EnvironmentConfig | boolean;
 }
 
 export const electronRs = (
@@ -106,15 +106,27 @@ export const electronRs = (
       main: mergeRsbuildConfig(main, config.main),
     };
     if (config.preload) {
-      main.tools = {
-        htmlPlugin: false,
-        rspack: {
-          dependencies: ['electron-rs-preload'],
-          name: 'electron-rs-main',
-          target: 'electron-main',
-        },
-      };
-      environments['preload'] = mergeRsbuildConfig(preload, config.preload);
+      if (typeof config.preload === 'object') {
+        main.tools = {
+          htmlPlugin: false,
+          rspack: {
+            dependencies: ['electron-rs-preload'],
+            name: 'electron-rs-main',
+            target: 'electron-main',
+          },
+        };
+        environments['preload'] = mergeRsbuildConfig(preload, config.preload);
+      } else {
+        main.tools = {
+          htmlPlugin: false,
+          rspack: {
+            dependencies: ['electron-rs-preload'],
+            name: 'electron-rs-main',
+            target: 'electron-main',
+          },
+        };
+        environments['preload'] = preload;
+      }
     }
     const rsbuild = createRsbuild({
       rsbuildConfig: {
