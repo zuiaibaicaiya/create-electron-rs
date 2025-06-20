@@ -1,5 +1,9 @@
-import type { RsbuildConfig, RsbuildPlugin } from '@rsbuild/core';
-import { createRsbuild } from '@rsbuild/core';
+import type {
+  RsbuildConfig,
+  RsbuildPlugin,
+  EnvironmentConfig,
+} from '@rsbuild/core';
+import { createRsbuild, mergeRsbuildConfig } from '@rsbuild/core';
 import electron from 'electron';
 import { spawn } from 'child_process';
 import * as path from 'node:path';
@@ -9,7 +13,14 @@ import * as bytenode from 'bytenode';
 
 const isDev = process.env.NODE_ENV === 'development';
 
-export const electronRs = (): RsbuildPlugin => ({
+interface electronRsConfig {
+  main: EnvironmentConfig;
+  preload?: EnvironmentConfig;
+}
+
+export const electronRs = (
+  config: electronRsConfig = { main: {} },
+): RsbuildPlugin => ({
   name: 'electronRs',
   async setup(api) {
     api.modifyRsbuildConfig((userConfig, { mergeRsbuildConfig }) => {
@@ -30,73 +41,84 @@ export const electronRs = (): RsbuildPlugin => ({
       };
       return mergeRsbuildConfig(userConfig, extraConfig);
     });
+    const main: EnvironmentConfig = {
+      performance: {
+        printFileSize: !isDev,
+      },
+      source: {
+        entry: {
+          main: fs.existsSync(path.join(process.cwd(), './electron/main.ts'))
+            ? path.join(process.cwd(), './electron/main.ts')
+            : path.join(process.cwd(), './electron/main.js'),
+        },
+      },
+      output: {
+        distPath: {
+          js: '',
+          root: 'dist/electron',
+        },
+        filename: {
+          js: '[name].cjs',
+        },
+        sourceMap: false,
+      },
+      tools: {
+        htmlPlugin: false,
+        rspack: {
+          name: 'electron-rs-main',
+          target: 'electron-main',
+        },
+      },
+    };
+    const preload: EnvironmentConfig = {
+      performance: {
+        printFileSize: !isDev,
+      },
+      source: {
+        entry: {
+          preload: fs.existsSync(
+            path.join(process.cwd(), './electron/preload.ts'),
+          )
+            ? path.join(process.cwd(), './electron/preload.ts')
+            : path.join(process.cwd(), './electron/preload.js'),
+        },
+      },
+      output: {
+        distPath: {
+          js: '',
+          root: 'dist/electron',
+        },
+        filename: {
+          js: '[name].cjs',
+        },
+        sourceMap: false,
+      },
+      tools: {
+        htmlPlugin: false,
+        rspack: {
+          name: 'electron-rs-preload',
+          target: 'electron-preload',
+        },
+      },
+    };
+
+    const environments: Record<string, EnvironmentConfig> = {
+      main: mergeRsbuildConfig(main, config.main),
+    };
+    if (config.preload) {
+      main.tools = {
+        htmlPlugin: false,
+        rspack: {
+          dependencies: ['electron-rs-preload'],
+          name: 'electron-rs-main',
+          target: 'electron-main',
+        },
+      };
+      environments['preload'] = mergeRsbuildConfig(preload, config.preload);
+    }
     const rsbuild = createRsbuild({
       rsbuildConfig: {
-        environments: {
-          main: {
-            performance: {
-              printFileSize: !isDev,
-            },
-            source: {
-              entry: {
-                main: fs.existsSync(
-                  path.join(process.cwd(), './electron/main.ts'),
-                )
-                  ? path.join(process.cwd(), './electron/main.ts')
-                  : path.join(process.cwd(), './electron/main.js'),
-              },
-            },
-            output: {
-              distPath: {
-                js: '',
-                root: 'dist/electron',
-              },
-              filename: {
-                js: '[name].cjs',
-              },
-              sourceMap: false,
-            },
-            tools: {
-              htmlPlugin: false,
-              rspack: {
-                dependencies: ['electron-rs-preload'],
-                name: 'electron-rs-main',
-                target: 'electron-main',
-              },
-            },
-          },
-          preload: {
-            performance: {
-              printFileSize: !isDev,
-            },
-            source: {
-              entry: {
-                preload: fs.existsSync(
-                  path.join(process.cwd(), './electron/preload.ts'),
-                )
-                  ? path.join(process.cwd(), './electron/preload.ts')
-                  : path.join(process.cwd(), './electron/preload.js'),
-              },
-            },
-            output: {
-              distPath: {
-                js: '',
-                root: 'dist/electron',
-              },
-              filename: {
-                js: '[name].cjs',
-              },
-              sourceMap: false,
-            },
-            tools: {
-              htmlPlugin: false,
-              rspack: {
-                name: 'electron-rs-preload',
-                target: 'electron-preload',
-              },
-            },
-          },
-        },
+        environments: environments,
       },
     });
     api.onBeforeStartDevServer(async () => {
