@@ -2,7 +2,7 @@ import {
   app,
   BrowserWindow
 } from 'electron';
-import { join } from 'node:path';
+// import { join } from 'node:path';
 
 app.commandLine.appendSwitch('remote-allow-origins', '*');
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
@@ -14,7 +14,7 @@ const createWindow = async () => {
       nodeIntegration: true,
       webSecurity: false,
       contextIsolation: false,
-      preload: join(__dirname, 'preload.cjs')
+      // preload: join(__dirname, 'preload.cjs')
     }
   };
   mainWindow = new BrowserWindow(config);

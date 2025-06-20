@@ -1,6 +1,6 @@
 {
   "name": "create-electron-rs",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Electron build tooling based on rsbuild",
   "author": "最爱白菜吖<1355081829@qq.com>",
   "license": "MIT",
