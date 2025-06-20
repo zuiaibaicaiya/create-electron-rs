@@ -1,6 +1,6 @@
 {
   "name": "electron-rs",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "Electron build tooling based on rsbuild",
   "author": "最爱白菜吖<1355081829@qq.com>",
   "license": "MIT",
@@ -8,6 +8,8 @@
   "keywords": [
     "electron",
     "electron-rs",
+    "create-electron-rs",
+    "rsbuild-plugin",
     "plugin"
   ],
   "type": "module",
@@ -25,6 +27,7 @@
   ],
   "scripts": {
     "build": "rslib build",
+    "publish": "npm publish --provenance false",
     "dev": "rslib build --watch",
     "format": "prettier --write .",
     "lint": "eslint ."
