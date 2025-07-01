@@ -15,7 +15,7 @@ const isDev = process.env.NODE_ENV === 'development';
 
 interface electronRsConfig {
   main: EnvironmentConfig;
-  preload?: EnvironmentConfig | boolean;
+  preload?: Partial<EnvironmentConfig>;
 }
 
 export const electronRs = (
@@ -106,7 +106,7 @@ export const electronRs = (
       main: mergeRsbuildConfig(main, config.main),
     };
     if (config.preload) {
-      if (typeof config.preload === 'object') {
+      if (config.preload) {
         main.tools = {
           htmlPlugin: false,
           rspack: {
