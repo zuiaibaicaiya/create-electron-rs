@@ -1,6 +1,6 @@
 {
   "name": "electron-rs",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Electron build tooling based on rsbuild",
   "author": "最爱白菜吖<1355081829@qq.com>",
   "license": "MIT",
@@ -10,6 +10,7 @@
     "electron-rs",
     "create-electron-rs",
     "rsbuild-plugin",
+    "electron-plugin",
     "plugin"
   ],
   "type": "module",
@@ -36,14 +37,14 @@
     "@eslint/js": "^9.25.1",
     "@rslib/core": "^0.10.4",
     "@types/node": "^22.15.30",
-    "electron": "^37.0.0",
     "eslint": "^9.25.1",
     "globals": "^16.0.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.1"
   },
-  "dependencies": {
+  "peerDependencies": {
+    "electron": "^37.0.0",
     "bytenode": "^1.5.7"
   }
 }

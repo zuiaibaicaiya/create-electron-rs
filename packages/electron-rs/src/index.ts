@@ -14,12 +14,13 @@ import * as bytenode from 'bytenode';
 const isDev = process.env.NODE_ENV === 'development';
 
 interface electronRsConfig {
-  main: EnvironmentConfig;
+  main: Partial<EnvironmentConfig>;
   preload?: Partial<EnvironmentConfig>;
+  ignorePack?: boolean;
 }
 
 export const electronRs = (
-  config: electronRsConfig = { main: {} },
+  config: electronRsConfig = { main: {}, ignorePack: false },
 ): RsbuildPlugin => ({
   name: 'electronRs',
   async setup(api) {
@@ -181,7 +182,9 @@ export const electronRs = (
           "require('bytenode');module.exports = require('./preload.jsc')",
         );
       }
-
+      if (config.ignorePack) {
+        return;
+      }
       spawn('electron-builder', {
         stdio: 'inherit',
         shell: true,
