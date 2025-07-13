@@ -14,7 +14,7 @@ import * as bytenode from 'bytenode';
 const isDev = process.env.NODE_ENV === 'development';
 
 interface electronRsConfig {
-  main: Partial<EnvironmentConfig>;
+  main?: Partial<EnvironmentConfig>;
   preload?: Partial<EnvironmentConfig>;
   ignorePack?: boolean;
 }
@@ -68,6 +68,10 @@ export const electronRs = (
         rspack: {
           name: 'electron-rs-main',
           target: 'electron-main',
+          output: {
+            module: true,
+          },
+          experiments: { outputModule: true },
         },
       },
     };
@@ -104,8 +108,11 @@ export const electronRs = (
     };
 
     const environments: Record<string, EnvironmentConfig> = {
-      main: mergeRsbuildConfig(main, config.main),
+      main,
     };
+    if (config.main) {
+      environments['main'] = mergeRsbuildConfig(main, config.main);
+    }
     if (config.preload) {
       if (config.preload) {
         main.tools = {
