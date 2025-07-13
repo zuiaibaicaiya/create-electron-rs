@@ -68,10 +68,6 @@ export const electronRs = (
         rspack: {
           name: 'electron-rs-main',
           target: 'electron-main',
-          output: {
-            module: true,
-          },
-          experiments: { outputModule: true },
         },
       },
     };
