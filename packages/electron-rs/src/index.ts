@@ -10,6 +10,7 @@ import * as path from 'node:path';
 import { resolve } from 'path';
 import * as fs from 'node:fs';
 import * as bytenode from 'bytenode';
+import * as Path from 'node:path';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -17,6 +18,7 @@ interface electronRsConfig {
   main?: Partial<EnvironmentConfig>;
   preload?: Partial<EnvironmentConfig>;
   ignorePack?: boolean;
+  appIcon?: string;
 }
 
 export const electronRs = (
@@ -24,6 +26,19 @@ export const electronRs = (
 ): RsbuildPlugin => ({
   name: 'electronRs',
   async setup(api) {
+    function copyIcon() {
+      if (config.appIcon) {
+        const iconFullPath = resolve(process.cwd(), config.appIcon);
+        if (fs.existsSync(iconFullPath)) {
+          const filename = Path.basename(iconFullPath);
+          fs.copyFileSync(
+            iconFullPath,
+            resolve(process.cwd(), 'dist', 'electron', filename),
+          );
+        }
+      }
+    }
+
     api.modifyRsbuildConfig((userConfig, { mergeRsbuildConfig }) => {
       const extraConfig: RsbuildConfig = {
         output: {
@@ -139,6 +154,7 @@ export const electronRs = (
     });
     api.onBeforeStartDevServer(async () => {
       await (await rsbuild).build();
+      copyIcon();
     });
     api.onAfterStartDevServer(async (options) => {
       const address = `http://localhost:${options.port}`;
@@ -163,6 +179,7 @@ export const electronRs = (
 
     api.onAfterBuild(async () => {
       await (await rsbuild).build();
+      copyIcon();
       // 加密主进程
       await bytenode.compileFile({
         electron: true,
