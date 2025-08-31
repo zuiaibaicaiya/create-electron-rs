@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@rsbuild/core": "^1.4.5",
-    "@rsbuild/plugin-node-polyfill": "^1.3.0",
-    "@rsbuild/plugin-react": "^1.3.2",
+    "@rsbuild/plugin-node-polyfill": "^1.4.2",
+    "@rsbuild/plugin-react": "^1.4.0",
     "electron": "^37.0.0",
     "electron-builder": "^26.0.12",
     "electron-rs": "^1.0.18"
