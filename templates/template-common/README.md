@@ -21,3 +21,8 @@ Build the app for production:
 ```bash
 npm run build
 ```
+
+If you need preload , modify electronRs config like this
+``` typescript
+electronRs({ preload: {} })
+```

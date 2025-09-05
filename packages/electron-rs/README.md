@@ -35,6 +35,10 @@ export default defineConfig({
 });
 
 ```
+If you need preload , modify electronRs config like this
+``` typescript
+electronRs({ preload: {} })
+```
 
 ## vue3+ts
 
@@ -87,7 +91,7 @@ npm run build
 # pnpm run build
 ```
 
-## you can also create a new project with `create-electron-rs`
+## You can also create a new project with `create-electron-rs`
 ```bash
 npm create electron-rs@latest
 # or pnpm
