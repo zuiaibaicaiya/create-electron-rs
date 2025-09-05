@@ -20,7 +20,7 @@
     "@rsbuild/plugin-react": "^1.4.0",
     "electron": "^37.0.0",
     "electron-builder": "^26.0.12",
-    "electron-rs": "^1.0.18"
+    "electron-rs": "^1.0.19"
   },
   "build": {
     "directories": {
