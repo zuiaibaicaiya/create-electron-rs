@@ -11,6 +11,8 @@ import { resolve } from 'path';
 import * as fs from 'node:fs';
 import * as bytenode from 'bytenode';
 import * as Path from 'node:path';
+import WebpackObfuscator from 'webpack-obfuscator';
+import type WebpackObfuscatorPlugin from 'webpack-obfuscator';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -19,6 +21,10 @@ interface electronRsConfig {
   preload?: Partial<EnvironmentConfig>;
   ignorePack?: boolean;
   appIcon?: string;
+  obfuscator?: {
+    options?: WebpackObfuscatorPlugin['options'];
+    excludes?: string | string[];
+  };
 }
 
 export const electronRs = (
@@ -40,6 +46,7 @@ export const electronRs = (
     }
 
     api.modifyRsbuildConfig((userConfig, { mergeRsbuildConfig }) => {
+      // userConfig.tools?.rspack?.plugins?.push()
       const extraConfig: RsbuildConfig = {
         output: {
           assetPrefix: './',
@@ -59,7 +66,7 @@ export const electronRs = (
     });
     const main: EnvironmentConfig = {
       performance: {
-        printFileSize: !isDev,
+        printFileSize: isDev,
       },
       source: {
         entry: {
@@ -155,6 +162,22 @@ export const electronRs = (
     api.onBeforeStartDevServer(async () => {
       await (await rsbuild).build();
       copyIcon();
+    });
+    api.modifyRspackConfig((_, { isProd, appendPlugins }) => {
+      if (isProd) {
+        // 生产模式加密js
+        if (config.obfuscator) {
+          const {
+            options = {
+              // rotateStringArray: true,
+              // stringArray: true,
+              // stringArrayThreshold: 0.75,
+            },
+            excludes = [],
+          } = config.obfuscator;
+          appendPlugins([new WebpackObfuscator(options, excludes)]);
+        }
+      }
     });
     api.onAfterStartDevServer(async (options) => {
       const address = `http://localhost:${options.port}`;

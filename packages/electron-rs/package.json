@@ -39,12 +39,16 @@
     "@types/node": "^22.15.30",
     "eslint": "^9.25.1",
     "globals": "^16.0.0",
+    "javascript-obfuscator": "^4.1.1",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.31.1"
+    "typescript-eslint": "^8.31.1",
+    "webpack-obfuscator": "^3.5.1"
   },
   "peerDependencies": {
-    "electron": "^37.0.0",
-    "bytenode": "^1.5.7"
+    "bytenode": ">=1.5.7",
+    "electron": ">=37.0.0",
+    "javascript-obfuscator": ">=4.1.1",
+    "webpack-obfuscator": ">=3.5.1"
   }
 }
