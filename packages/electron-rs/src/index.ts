@@ -14,8 +14,6 @@ import * as Path from 'node:path';
 import WebpackObfuscator from 'webpack-obfuscator';
 import type WebpackObfuscatorPlugin from 'webpack-obfuscator';
 
-const isDev = process.env.NODE_ENV === 'development';
-
 interface electronRsConfig {
   main?: Partial<EnvironmentConfig>;
   preload?: Partial<EnvironmentConfig>;
@@ -32,6 +30,7 @@ export const electronRs = (
 ): RsbuildPlugin => ({
   name: 'electronRs',
   async setup(api) {
+    const isDev = api.context.action === 'dev';
     function copyIcon() {
       if (config.appIcon) {
         const iconFullPath = resolve(process.cwd(), config.appIcon);
@@ -46,10 +45,22 @@ export const electronRs = (
     }
 
     api.modifyRsbuildConfig((userConfig, { mergeRsbuildConfig }) => {
-      // userConfig.tools?.rspack?.plugins?.push()
       const extraConfig: RsbuildConfig = {
         output: {
           assetPrefix: './',
+          distPath: {
+            favicon: '',
+            js: '',
+            jsAsync: '',
+            css: '',
+            cssAsync: '',
+            svg: '',
+            font: '',
+            wasm: '',
+            image: '',
+            media: '',
+            assets: '',
+          },
           externals: {
             fs: 'commonjs2 fs',
             path: 'commonjs2 path',
@@ -66,7 +77,7 @@ export const electronRs = (
     });
     const main: EnvironmentConfig = {
       performance: {
-        printFileSize: isDev,
+        printFileSize: !isDev,
       },
       source: {
         entry: {
