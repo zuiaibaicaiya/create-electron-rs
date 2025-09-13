@@ -3,7 +3,7 @@
 ## Create your project
 ``` bash
 npm create rsbuild@latest
-# pnpm 
+# pnpm
 # pnpm create rsbuild@latest
 
 ```
@@ -58,7 +58,7 @@ export default defineConfig({
 
 ## Create main.ts and preload.ts in `electron` folder at project root
 ```bash
-mkdir electron && cd electron 
+mkdir electron && cd electron
 touch electron.ts && touch preload.ts
 ```
 ## Modify you package.json add the code
@@ -78,14 +78,38 @@ touch electron.ts && touch preload.ts
 }
 
 ```
+
+If you need obfuscator , modify electronRs config like this . It's only effective in the production mode.
+
+```typescript
+
+electronRs({
+  obfuscator: {
+    options: {
+      rotateStringArray: true,
+      stringArray: true,
+      stringArrayThreshold: 0.75,
+    },
+    excludes: [
+      '**/*.ts',
+      '**/*.tsx',
+      '**/*.d.ts',
+      '**/node_modules/**',
+      // '**/vendor.js' // 排除第三方库
+    ],
+  },
+}),
+
+```
+
 ## Start your project
-```bash 
+```bash
 npm run dev
 # or
 # pnpm run dev
 ```
 ## Build your project
-```bash 
+```bash
 npm run build
 # or
 # pnpm run build
