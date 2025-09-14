@@ -36,7 +36,7 @@ async function getTemplateName({ template }: Argv) {
         // { value: 'lit', label: 'Lit' },
         // { value: 'preact', label: 'Preact' },
         // { value: 'svelte', label: 'Svelte' },
-        // { value: 'solid', label: 'Solid' }
+        { value: 'solid', label: 'Solid' },
       ],
     }),
   );
@@ -94,7 +94,7 @@ create({
     // 'svelte-js',
     // 'svelte-ts',
     // 'solid-js',
-    // 'solid-ts'
+    'solid-ts',
   ],
   getTemplateName,
   mapESLintTemplate,
