@@ -1,10 +1,11 @@
 {
   "name": "electron-rs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Electron build tooling based on rsbuild",
   "author": "最爱白菜吖<1355081829@qq.com>",
   "license": "MIT",
-  "homepage": "https://space.bilibili.com/388985971",
+  "homepage": "https://www.zuiaibaicaiya.xyz/",
+  "repository": "https://github.com/zuiaibaicaiya/create-electron-rs.git",
   "keywords": [
     "electron",
     "electron-rs",
