@@ -14,9 +14,9 @@
     "vue": "^3.5.22"
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.5.15",
+    "@rsbuild/core": "^1.6.3",
     "@rsbuild/plugin-node-polyfill": "^1.4.2",
-    "@rsbuild/plugin-vue": "^1.1.2",
+    "@rsbuild/plugin-vue": "^1.2.0",
     "electron": "^37.5.0",
     "electron-builder": "^26.0.12",
     "electron-rs": "^1.1.2"
