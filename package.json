@@ -1,6 +1,6 @@
 {
   "name": "create-electron-rs",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Electron build tooling based on rsbuild",
   "author": "最爱白菜吖<1355081829@qq.com>",
   "license": "MIT",
@@ -56,7 +56,7 @@
     "typescript-eslint": "^8.31.1"
   },
   "dependencies": {
-    "create-rstack": "^1.7.4"
+    "create-rstack": "^1.7.11"
   },
   "publishConfig": {
     "access": "public",
