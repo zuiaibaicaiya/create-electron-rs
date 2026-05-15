@@ -1,0 +1,67 @@
+{
+  "name": "create-electron-rs",
+  "version": "2.0.0",
+  "description": "Electron build tooling based on rsbuild",
+  "author": "最爱白菜吖<1355081829@qq.com>",
+  "license": "MIT",
+  "homepage": "https://www.zuiaibaicaiya.xyz/",
+  "repository": "https://github.com/zuiaibaicaiya/create-electron-rs.git",
+  "keywords": [
+    "electron",
+    "electron-rs",
+    "create-electron-rs",
+    "rsbuild",
+    "rsbuild-plugin",
+    "electron-plugin",
+    "cli",
+    "plugin"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "create-electron-rs": "./bin.js",
+    "cer": "./bin.js"
+  },
+  "files": [
+    "templates",
+    "dist",
+    "bin.js"
+  ],
+  "workspaces": [
+    "packages/*",
+    "templates/*"
+  ],
+  "scripts": {
+    "build": "rslib build",
+    "publish:new": "npm publish --provenance false",
+    "dev": "rslib build --watch",
+    "format": "prettier --write .",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@rslib/core": "^0.21.5",
+    "@types/node": "^24.12.4",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.1"
+  },
+  "dependencies": {
+    "create-rstack": "^2.1.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/"
+  }
+}
