@@ -8,7 +8,15 @@ import { electronRs } from 'electron-rs';
 export default defineConfig({
   plugins: [
     pluginReact(),
-    electronRs(),
+    electronRs({
+      obfuscator: {
+        options: {
+          rotateStringArray: true,
+          stringArray: true,
+          stringArrayThreshold: 0.75,
+        },
+      },
+    }),
     pluginNodePolyfill(),
     pluginBabel({
       include: /\.[jt]sx?$/,
