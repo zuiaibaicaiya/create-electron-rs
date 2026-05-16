@@ -1,18 +1,19 @@
 import type {
+  EnvironmentConfig,
   RsbuildConfig,
   RsbuildPlugin,
-  EnvironmentConfig,
+  Rspack,
 } from '@rsbuild/core';
 import { createRsbuild, mergeRsbuildConfig } from '@rsbuild/core';
 import electron from 'electron';
 import { spawn } from 'child_process';
 import * as path from 'node:path';
+import * as Path from 'node:path';
 import { resolve } from 'path';
 import * as fs from 'node:fs';
 import * as bytenode from 'bytenode';
-import * as Path from 'node:path';
-import WebpackObfuscator from 'webpack-obfuscator';
 import type WebpackObfuscatorPlugin from 'webpack-obfuscator';
+import WebpackObfuscator from 'webpack-obfuscator';
 
 interface electronRsConfig {
   main?: Partial<EnvironmentConfig>;
@@ -186,9 +187,12 @@ export const electronRs = (
             },
             excludes = [],
           } = config.obfuscator;
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          appendPlugins([new WebpackObfuscator(options, excludes)]);
+          appendPlugins(
+            new WebpackObfuscator(
+              options,
+              excludes,
+            ) as unknown as Rspack.RspackPluginInstance,
+          );
         }
       }
     });
