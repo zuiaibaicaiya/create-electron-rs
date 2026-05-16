@@ -54,5 +54,10 @@
     "electron": ">=22.3.27",
     "javascript-obfuscator": "^5.4.2",
     "webpack-obfuscator": "^3.6.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/"
   }
 }
