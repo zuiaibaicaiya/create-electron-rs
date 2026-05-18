@@ -6,7 +6,12 @@ export default defineConfig({
       externals: ['electron', 'bytenode', '@rsbuild/core'],
     },
   },
-  output: { minify: true },
+  output: {
+    minify: true,
+    externals: {
+      bytenode: 'commonjs2 bytenode',
+    },
+  },
   lib: [
     {
       format: 'esm',
