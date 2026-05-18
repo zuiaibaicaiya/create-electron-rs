@@ -41,9 +41,10 @@ electronRs({
       stringArrayThreshold: 0.75,
     },
     excludes: [
-      '**/*.ts',
-      '**/*.tsx',
-      '**/*.d.ts',
+      '**/lib-vue.*.js',
+      '**/lib-router.*.js',
+      '**/vendors.*.js',
+      '**/runtime~*.js',
       '**/node_modules/**',
       // '**/vendor.js' // 排除第三方库
     ],
