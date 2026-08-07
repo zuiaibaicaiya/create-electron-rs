@@ -23,7 +23,7 @@
     "@vue/eslint-config-typescript": "^14.9.0",
     "electron": "^43.3.0",
     "electron-builder": "^26.15.3",
-    "electron-rs": "^2.0.1",
+    "electron-rs": "^2.1.1",
     "eslint": "^10.8.0",
     "eslint-plugin-vue": "^10.10.0",
     "globals": "^17.9.0",
