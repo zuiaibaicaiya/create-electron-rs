@@ -222,7 +222,9 @@ export const electronRs = (
       copyIcon();
       // 加密主进程
       await bytenode.compileFile({
-        electron: true,
+        compileAsModule: true, // 支持 module.exports / require
+        electronMain: true, // Electron43.3 强制开启编译主进程
+        compress: true, // brotli 压缩字节码，减小体积
         filename: resolve(process.cwd(), 'dist', 'electron', 'main.cjs'),
       });
       fs.writeFileSync(
@@ -234,7 +236,9 @@ export const electronRs = (
       ) {
         // 加密preload
         await bytenode.compileFile({
-          electron: true,
+          compileAsModule: true, // 支持 module.exports / require
+          electronMain: true, // Electron43.3 强制开启编译主进程
+          compress: true, // brotli 压缩字节码，减小体积
           filename: resolve(process.cwd(), 'dist', 'electron', 'preload.cjs'),
         });
         fs.writeFileSync(
